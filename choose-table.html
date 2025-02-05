@@ -20,7 +20,6 @@
       <!-- Các bàn chơi sẽ được render ở đây -->
     </div>
 
-    <!-- Modal Tạo Bàn Mới -->
     <div class="create-table-modal" id="create-table-modal">
       <div class="modal-content">
         <input
@@ -83,7 +82,6 @@
         "create-table-cancel"
       );
 
-      // Render danh sách bàn chơi
       function renderTables(tables) {
         tablesContainer.innerHTML = tables
           .map(
@@ -107,7 +105,6 @@
           .join("");
       }
 
-      // Tìm kiếm bàn chơi
       function searchTables() {
         const searchTerm = searchInput.value.toLowerCase();
         const filteredTables = initialTables.filter((table) =>
@@ -122,17 +119,14 @@
         // Trong thực tế sẽ có logic kết nối WebSocket
       }
 
-      // Mở modal tạo bàn
       openCreateModalBtn.addEventListener("click", () => {
         createTableModal.style.display = "flex";
       });
 
-      // Đóng modal tạo bàn
       createTableCancelBtn.addEventListener("click", () => {
         createTableModal.style.display = "none";
       });
 
-      // Xác nhận tạo bàn
       createTableConfirmBtn.addEventListener("click", () => {
         const tableName = document.getElementById("table-name-input").value;
         const betAmount = document.getElementById("bet-amount-input").value;
@@ -154,10 +148,8 @@
         }
       });
 
-      // Sự kiện tìm kiếm
       searchInput.addEventListener("input", searchTables);
 
-      // Khởi tạo ban đầu
       renderTables(initialTables);
     </script>
   </body>

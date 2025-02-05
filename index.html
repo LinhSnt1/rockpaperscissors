@@ -27,34 +27,27 @@
     </div>
 
     <script>
-      // Các sự kiện cho các nút chế độ chơi
       document.getElementById("quick-play").addEventListener("click", () => {
-        // Chuyển đến màn hình chơi nhanh
         window.location.href = "quick-play.html";
       });
 
       document
         .getElementById("play-with-friends")
         .addEventListener("click", () => {
-          // Chuyển đến màn hình chơi với bạn
           window.location.href = "play-with-friends.html";
         });
 
       document.getElementById("choose-table").addEventListener("click", () => {
-        // Chuyển đến màn hình chọn bàn
         window.location.href = "choose-table.html";
       });
 
       document
         .getElementById("play-with-computer")
         .addEventListener("click", () => {
-          // Chuyển đến màn hình chơi với máy
           window.location.href = "play-with-computer.html";
         });
 
-      // Sự kiện nút cộng coin
       document.querySelector(".add-coins").addEventListener("click", () => {
-        // Hiển thị giao diện nạp coin
         alert("Chuyển đến màn hình nạp coin");
       });
     </script>

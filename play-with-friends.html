@@ -18,9 +18,7 @@
             placeholder="Tìm kiếm bạn bè..."
           />
         </div>
-        <div class="friend-list" id="friend-list">
-          <!-- Danh sách bạn bè sẽ được render ở đây -->
-        </div>
+        <div class="friend-list" id="friend-list"></div>
       </div>
 
       <div class="invite-section">
@@ -41,7 +39,6 @@
       </div>
     </div>
 
-    <!-- Modal Lời Mời Chơi -->
     <div
       id="invite-modal"
       style="
@@ -76,7 +73,7 @@
     </div>
 
     <script>
-      // Dữ liệu mẫu bạn bè
+      // Dữ liệu mẫu
       const friendsList = [
         { id: 1, name: "Ngọc Linh", online: true },
         { id: 2, name: "Minh Anh", online: false },
@@ -91,7 +88,6 @@
       const inviteModeBtn = document.getElementById("invite-mode");
       const inviteModal = document.getElementById("invite-modal");
 
-      // Render danh sách bạn bè
       function renderFriendsList(friends) {
         friendListElement.innerHTML = friends
           .map(
@@ -114,7 +110,6 @@
           .join("");
       }
 
-      // Tìm kiếm bạn bè
       function searchFriends() {
         const searchTerm = friendSearchInput.value.toLowerCase();
         const filteredFriends = friendsList.filter((friend) =>
@@ -123,12 +118,10 @@
         renderFriendsList(filteredFriends);
       }
 
-      // Mời bạn chơi
       function inviteFriend(friendId) {
         const friend = friendsList.find((f) => f.id === friendId);
         alert(`Đã gửi lời mời chơi cho ${friend.name}`);
 
-        // Sinh mã mời
         const inviteCode = Math.random()
           .toString(36)
           .substring(2, 8)
@@ -136,25 +129,20 @@
         inviteCodeInput.value = inviteCode;
       }
 
-      // Sao chép mã mời
       copyCodeBtn.addEventListener("click", () => {
         inviteCodeInput.select();
         document.execCommand("copy");
         alert("Đã sao chép mã mời");
       });
 
-      // Chế độ chơi ngẫu nhiên
       randomModeBtn.addEventListener("click", () => {
         alert("Đang tìm đối thủ ngẫu nhiên...");
       });
 
-      // Chế độ chơi với bạn bè
       inviteModeBtn.addEventListener("click", () => {
-        // Hiển thị modal lời mời
         inviteModal.style.display = "flex";
       });
 
-      // Xử lý nút chấp nhận/từ chối lời mời
       document.querySelector(".accept-btn").addEventListener("click", () => {
         alert("Chấp nhận lời mời chơi");
         inviteModal.style.display = "none";
@@ -165,10 +153,8 @@
         inviteModal.style.display = "none";
       });
 
-      // Sự kiện tìm kiếm
       friendSearchInput.addEventListener("input", searchFriends);
 
-      // Khởi tạo ban đầu
       renderFriendsList(friendsList);
     </script>
   </body>
