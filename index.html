@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Bao Búa Kéo - Trang Chủ</title>
+    <link rel="stylesheet" href="style/index.css" />
+  </head>
+  <body>
+    <div class="header">
+      <div class="user-info">
+        <img src="/api/placeholder/50/50" alt="Avatar" class="avatar" />
+        <span>Nickname</span>
+      </div>
+      <div class="coins">
+        <span>100</span>
+
+        <img class="coin-img" src="coin.png" alt="Coin Icon" />
+        <button class="add-coins">+</button>
+      </div>
+    </div>
+
+    <div class="game-modes">
+      <button id="quick-play" class="game-button">Chơi Nhanh</button>
+      <button id="play-with-friends" class="game-button">Chơi Với Bạn</button>
+      <button id="choose-table" class="game-button">Chọn Bàn</button>
+      <button id="play-with-computer" class="game-button">Chơi Với Máy</button>
+    </div>
+
+    <script>
+      // Các sự kiện cho các nút chế độ chơi
+      document.getElementById("quick-play").addEventListener("click", () => {
+        // Chuyển đến màn hình chơi nhanh
+        window.location.href = "quick-play.html";
+      });
+
+      document
+        .getElementById("play-with-friends")
+        .addEventListener("click", () => {
+          // Chuyển đến màn hình chơi với bạn
+          window.location.href = "play-with-friends.html";
+        });
+
+      document.getElementById("choose-table").addEventListener("click", () => {
+        // Chuyển đến màn hình chọn bàn
+        window.location.href = "choose-table.html";
+      });
+
+      document
+        .getElementById("play-with-computer")
+        .addEventListener("click", () => {
+          // Chuyển đến màn hình chơi với máy
+          window.location.href = "play-with-computer.html";
+        });
+
+      // Sự kiện nút cộng coin
+      document.querySelector(".add-coins").addEventListener("click", () => {
+        // Hiển thị giao diện nạp coin
+        alert("Chuyển đến màn hình nạp coin");
+      });
+    </script>
+  </body>
+</html>

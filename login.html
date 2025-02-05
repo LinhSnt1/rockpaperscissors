@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đăng Nhập - Bao Búa Kéo</title>
+    <link rel="stylesheet" href="style/login.css" />
+  </head>
+  <body>
+    <button class="back-home" onclick="window.location.href='index.html'">
+      ←
+    </button>
+
+    <div class="login-container">
+      <div class="game-logo">🎮</div>
+      <h1>Đăng Nhập Bao Búa Kéo</h1>
+      <p class="description">
+        Đăng nhập bằng tài khoản Telegram của bạn để bắt đầu chơi và kết nối với
+        bạn bè!
+      </p>
+
+      <button class="telegram-login" onclick="loginWithTelegram()">
+        <svg
+          class="telegram-icon"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M21.5 2L2 9.5l7 4L16 8l-6.5 7.5L16 22l5.5-20z" />
+        </svg>
+        Đăng nhập với Telegram
+      </button>
+
+      <div class="benefits">
+        <div class="benefit-item">
+          <svg
+            class="benefit-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+            <polyline points="22 4 12 14.01 9 11.01" />
+          </svg>
+          Dễ dàng đăng nhập với tài khoản Telegram
+        </div>
+        <div class="benefit-item">
+          <svg
+            class="benefit-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+          </svg>
+          Chơi cùng bạn bè trên Telegram
+        </div>
+        <div class="benefit-item">
+          <svg
+            class="benefit-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="12" cy="12" r="3" />
+            <path
+              d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"
+            />
+          </svg>
+          Lưu trữ tiến độ và thành tích
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function loginWithTelegram() {
+        // Thay thế bằng Bot Token của bạn
+        const botToken = "YOUR_BOT_TOKEN";
+
+        // Tạo URL đăng nhập Telegram
+        const redirectUrl = encodeURIComponent(
+          window.location.origin + "/auth/telegram/callback"
+        );
+        const telegramLoginUrl = `https://telegram.me/oauth/authorize?bot_id=${botToken}&redirect_url=${redirectUrl}`;
+
+        // Chuyển hướng người dùng đến trang đăng nhập Telegram
+        window.location.href = telegramLoginUrl;
+      }
+    </script>
+  </body>
+</html>

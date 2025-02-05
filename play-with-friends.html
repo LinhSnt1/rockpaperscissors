@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Chơi Với Bạn - Bao Búa Kéo</title>
+    <link rel="stylesheet" href="style/play-with-friends.css" />
+  </head>
+  <body>
+    <button class="back-home" onclick="window.location.href='index.html'">
+      ←
+    </button>
+    <div class="container">
+      <div class="friend-section">
+        <div class="search-friend">
+          <input
+            type="text"
+            id="friend-search"
+            placeholder="Tìm kiếm bạn bè..."
+          />
+        </div>
+        <div class="friend-list" id="friend-list">
+          <!-- Danh sách bạn bè sẽ được render ở đây -->
+        </div>
+      </div>
+
+      <div class="invite-section">
+        <div class="invite-code-section">
+          <input
+            type="text"
+            id="invite-code"
+            placeholder="Nhập mã mời"
+            readonly
+          />
+          <button class="copy-btn" id="copy-code-btn">Sao Chép</button>
+        </div>
+      </div>
+
+      <div class="game-modes">
+        <button class="game-mode-btn" id="random-mode">Chơi Ngẫu Nhiên</button>
+        <button class="game-mode-btn" id="invite-mode">Chơi Với Bạn Bè</button>
+      </div>
+    </div>
+
+    <!-- Modal Lời Mời Chơi -->
+    <div
+      id="invite-modal"
+      style="
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      "
+    >
+      <div
+        style="
+          background-color: white;
+          padding: 30px;
+          border-radius: 10px;
+          text-align: center;
+        "
+      >
+        <div class="invite-notification">
+          Ngọc Linh đã mời bạn chơi Bao Búa Kéo!
+        </div>
+        <div class="game-invite-btns">
+          <button class="invite-game-btn accept-btn">Chấp Nhận</button>
+          <button class="invite-game-btn decline-btn">Từ Chối</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Dữ liệu mẫu bạn bè
+      const friendsList = [
+        { id: 1, name: "Ngọc Linh", online: true },
+        { id: 2, name: "Minh Anh", online: false },
+        { id: 3, name: "Hoàng Nam", online: true },
+      ];
+
+      const friendListElement = document.getElementById("friend-list");
+      const friendSearchInput = document.getElementById("friend-search");
+      const inviteCodeInput = document.getElementById("invite-code");
+      const copyCodeBtn = document.getElementById("copy-code-btn");
+      const randomModeBtn = document.getElementById("random-mode");
+      const inviteModeBtn = document.getElementById("invite-mode");
+      const inviteModal = document.getElementById("invite-modal");
+
+      // Render danh sách bạn bè
+      function renderFriendsList(friends) {
+        friendListElement.innerHTML = friends
+          .map(
+            (friend) => `
+                <div class="friend-item">
+                    <span>
+                        ${friend.name} 
+                        ${friend.online ? "🟢" : "🔴"}
+                    </span>
+                    <button 
+                        class="invite-btn" 
+                        onclick="inviteFriend(${friend.id})"
+                        ${!friend.online ? "disabled" : ""}
+                    >
+                        Mời Chơi
+                    </button>
+                </div>
+            `
+          )
+          .join("");
+      }
+
+      // Tìm kiếm bạn bè
+      function searchFriends() {
+        const searchTerm = friendSearchInput.value.toLowerCase();
+        const filteredFriends = friendsList.filter((friend) =>
+          friend.name.toLowerCase().includes(searchTerm)
+        );
+        renderFriendsList(filteredFriends);
+      }
+
+      // Mời bạn chơi
+      function inviteFriend(friendId) {
+        const friend = friendsList.find((f) => f.id === friendId);
+        alert(`Đã gửi lời mời chơi cho ${friend.name}`);
+
+        // Sinh mã mời
+        const inviteCode = Math.random()
+          .toString(36)
+          .substring(2, 8)
+          .toUpperCase();
+        inviteCodeInput.value = inviteCode;
+      }
+
+      // Sao chép mã mời
+      copyCodeBtn.addEventListener("click", () => {
+        inviteCodeInput.select();
+        document.execCommand("copy");
+        alert("Đã sao chép mã mời");
+      });
+
+      // Chế độ chơi ngẫu nhiên
+      randomModeBtn.addEventListener("click", () => {
+        alert("Đang tìm đối thủ ngẫu nhiên...");
+      });
+
+      // Chế độ chơi với bạn bè
+      inviteModeBtn.addEventListener("click", () => {
+        // Hiển thị modal lời mời
+        inviteModal.style.display = "flex";
+      });
+
+      // Xử lý nút chấp nhận/từ chối lời mời
+      document.querySelector(".accept-btn").addEventListener("click", () => {
+        alert("Chấp nhận lời mời chơi");
+        inviteModal.style.display = "none";
+      });
+
+      document.querySelector(".decline-btn").addEventListener("click", () => {
+        alert("Từ chối lời mời chơi");
+        inviteModal.style.display = "none";
+      });
+
+      // Sự kiện tìm kiếm
+      friendSearchInput.addEventListener("input", searchFriends);
+
+      // Khởi tạo ban đầu
+      renderFriendsList(friendsList);
+    </script>
+  </body>
+</html>

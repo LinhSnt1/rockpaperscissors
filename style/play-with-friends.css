@@ -1,0 +1,260 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+:root {
+  --primary-color: #4e54c8;
+  --secondary-color: #8f94fb;
+  --background-gradient: linear-gradient(45deg, #4e54c8, #8f94fb);
+  --text-light: #ffffff;
+  --text-dark: #333333;
+  --card-bg: rgba(255, 255, 255, 0.95);
+  --hover-color: rgba(255, 255, 255, 0.2);
+  --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+body {
+  min-height: 100vh;
+  background: var(--background-gradient);
+  padding: 20px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 80px auto 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  padding: 20px;
+}
+
+/* Back Button */
+.back-home {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  padding: 12px 24px;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 25px;
+  color: var(--text-light);
+  font-size: 42px;
+  cursor: pointer;
+  backdrop-filter: blur(5px);
+  transition: all 0.3s ease;
+}
+
+.back-home:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateX(-3px);
+}
+
+/* Friend Section */
+.friend-section {
+  background: var(--card-bg);
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+
+.search-friend input {
+  width: 100%;
+  padding: 15px 25px;
+  border: 1px solid #ddd;
+  border-radius: 25px;
+  font-size: 32px;
+  margin-bottom: 20px;
+}
+
+.search-friend input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+.friend-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.friend-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  font-size: 32px;
+}
+
+.friend-item span {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.invite-btn {
+  padding: 8px 20px;
+  border: none;
+  border-radius: 20px;
+  background: var(--primary-color);
+  color: var(--text-light);
+  font-size: 28px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.invite-btn:hover:not([disabled]) {
+  background: var(--secondary-color);
+  transform: translateY(-2px);
+}
+
+.invite-btn[disabled] {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* Invite Section */
+.invite-section {
+  background: var(--card-bg);
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+
+.invite-code-section {
+  display: flex;
+  gap: 15px;
+}
+
+#invite-code {
+  flex: 1;
+  padding: 15px 25px;
+  border: 1px solid #ddd;
+  border-radius: 25px;
+  font-size: 32px;
+  background: #f8f9fa;
+}
+
+.copy-btn {
+  padding: 15px 30px;
+  border: none;
+  border-radius: 25px;
+  background: var(--primary-color);
+  color: var(--text-light);
+  font-size: 32px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.copy-btn:hover {
+  background: var(--secondary-color);
+  transform: translateY(-2px);
+}
+
+/* Game Modes */
+.game-modes {
+  display: flex;
+  gap: 20px;
+}
+
+.game-mode-btn {
+  flex: 1;
+  padding: 20px;
+  border: none;
+  border-radius: 15px;
+  background: var(--primary-color);
+  color: var(--text-light);
+  font-size: 36px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.game-mode-btn:hover {
+  background: var(--secondary-color);
+  transform: translateY(-3px);
+}
+
+/* Invite Modal */
+#invite-modal {
+  backdrop-filter: blur(5px);
+}
+
+.invite-notification {
+  font-size: 36px;
+  margin-bottom: 30px;
+  color: var(--text-dark);
+}
+
+.game-invite-btns {
+  display: flex;
+  gap: 20px;
+}
+
+.invite-game-btn {
+  flex: 1;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 12px;
+  font-size: 32px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.accept-btn {
+  background: var(--primary-color);
+  color: var(--text-light);
+}
+
+.decline-btn {
+  background: #f0f0f0;
+  color: var(--text-dark);
+}
+
+.invite-game-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+  .container {
+    margin-top: 60px;
+  }
+
+  .game-modes {
+    flex-direction: column;
+  }
+
+  .invite-code-section {
+    flex-direction: column;
+  }
+
+  .copy-btn {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .back-home {
+    top: 10px;
+    left: 10px;
+    font-size: 32px;
+  }
+
+  .friend-item,
+  .invite-btn,
+  #invite-code,
+  .copy-btn,
+  .game-mode-btn,
+  .invite-notification,
+  .invite-game-btn {
+    font-size: 24px;
+  }
+
+  .container {
+    padding: 10px;
+  }
+}

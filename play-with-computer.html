@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Bao Búa Kéo</title>
+    <link rel="stylesheet" href="style/play-with-computer.css" />
+  </head>
+  <body>
+    <button class="back-home" onclick="window.location.href='index.html'">
+      ←
+    </button>
+    <h1>Bao Búa Kéo</h1>
+
+    <div id="scores">
+      <div class="score">Người chơi: <span id="player-score">0</span></div>
+      <div class="score">Máy: <span id="computer-score">0</span></div>
+    </div>
+
+    <div id="result">Hãy chọn một lựa chọn!</div>
+
+    <div class="choices">
+      <div class="choice" onclick="play('Bao')">✋</div>
+      <div class="choice" onclick="play('Búa')">✊</div>
+      <div class="choice" onclick="play('Kéo')">✌️</div>
+    </div>
+
+    <script>
+      let playerScore = 0;
+      let computerScore = 0;
+
+      function computerChoice() {
+        const choices = ["Bao", "Búa", "Kéo"];
+        const randomIndex = Math.floor(Math.random() * 3);
+        return choices[randomIndex];
+      }
+
+      function determineWinner(playerChoice, computerChoice) {
+        if (playerChoice === computerChoice) {
+          return "Hòa";
+        }
+
+        const winConditions = {
+          Bao: "Kéo",
+          Búa: "Bao",
+          Kéo: "Búa",
+        };
+
+        if (winConditions[playerChoice] === computerChoice) {
+          return "Bạn thắng";
+        } else {
+          return "Máy thắng";
+        }
+      }
+
+      function play(playerChoice) {
+        const compChoice = computerChoice();
+        const result = determineWinner(playerChoice, compChoice);
+
+        document.getElementById(
+          "result"
+        ).innerHTML = `Bạn chọn: ${playerChoice} | Máy chọn: ${compChoice} | ${result}`;
+
+        if (result === "Bạn thắng") {
+          playerScore++;
+          document.getElementById("player-score").textContent = playerScore;
+        } else if (result === "Máy thắng") {
+          computerScore++;
+          document.getElementById("computer-score").textContent = computerScore;
+        }
+      }
+    </script>
+  </body>
+</html>

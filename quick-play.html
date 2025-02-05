@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Bao Búa Kéo - Chơi Nhanh PvP</title>
+    <link rel="stylesheet" href="style/quick-play.css" />
+  </head>
+  <body>
+    <button class="back-home" onclick="window.location.href='index.html'">
+      ←
+    </button>
+    <h1>Búa Bao Kéo Online</h1>
+
+    <div id="match-status">Đang tìm đối thủ...</div>
+
+    <div class="game-container" id="game-container">
+      <!-- Đối thủ ảo trước -->
+      <div class="player" id="player2">
+        <div class="player-info">
+          <img src="/api/placeholder/50/50" alt="Avatar" class="avatar" />
+          <span id="player2-name">Đối Thủ Ảo</span>
+        </div>
+        <div class="timer" id="player2-timer">30</div>
+        <div class="waiting" id="player2-waiting">Đang chờ đối thủ chọn...</div>
+      </div>
+
+      <!-- Người chơi sau -->
+      <div class="player" id="player1">
+        <div class="player-info">
+          <img src="/api/placeholder/50/50" alt="Avatar" class="avatar" />
+          <span id="player1-name">Bạn</span>
+        </div>
+        <div class="timer" id="player1-timer">30</div>
+        <div class="choices">
+          <div
+            class="choice"
+            data-choice="Bao"
+            onclick="selectChoice('Bao', 1)"
+          >
+            ✋
+          </div>
+          <div
+            class="choice"
+            data-choice="Búa"
+            onclick="selectChoice('Búa', 1)"
+          >
+            ✊
+          </div>
+          <div
+            class="choice"
+            data-choice="Kéo"
+            onclick="selectChoice('Kéo', 1)"
+          >
+            ✌️
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="result" id="result"></div>
+
+    <button id="find-match" class="game-button">Tìm Trận</button>
+
+    <script>
+      let timeLeft = 30;
+      let timer = null;
+      let playerChoice = null;
+      let opponentChoice = null;
+
+      function startTimer() {
+        const timerElement = document.getElementById("player1-timer");
+        timeLeft = 30;
+        timerElement.textContent = timeLeft;
+
+        timer = setInterval(() => {
+          timeLeft--;
+          timerElement.textContent = timeLeft;
+
+          if (timeLeft <= 0) {
+            clearInterval(timer);
+            if (!playerChoice) {
+              autoSelectChoice();
+            }
+          }
+        }, 1000);
+      }
+
+      function selectChoice(choice, player) {
+        if (player === 1) {
+          document
+            .querySelectorAll(".choice")
+            .forEach((el) => el.classList.remove("selected"));
+          document
+            .querySelector(`.choice[data-choice="${choice}"]`)
+            .classList.add("selected");
+          playerChoice = choice;
+
+          socket.send(
+            JSON.stringify({ type: "player_choice", choice: choice })
+          );
+        }
+      }
+
+      function autoSelectChoice() {
+        const choices = ["Bao", "Búa", "Kéo"];
+        const randomChoice =
+          choices[Math.floor(Math.random() * choices.length)];
+        selectChoice(randomChoice, 1);
+      }
+
+      function findMatch() {
+        document.getElementById("match-status").textContent =
+          "Đã tìm thấy đối thủ";
+        document.getElementById("game-container").style.display = "flex";
+        document.getElementById("player2-name").textContent = "Đối Thủ Ảo";
+        startTimer();
+      }
+
+      document
+        .getElementById("find-match")
+        .addEventListener("click", findMatch);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Chọn Bàn Chơi</title>
+    <link rel="stylesheet" href="style/choose-table.css" />
+  </head>
+  <body>
+    <button class="back-home" onclick="window.location.href='index.html'">
+      ←
+    </button>
+    <div class="search-container">
+      <input type="text" id="search-input" placeholder="Tìm kiếm bàn chơi..." />
+      <button class="create-table-btn" id="open-create-modal">
+        Tạo Bàn Mới
+      </button>
+    </div>
+
+    <div class="tables-container" id="tables-container">
+      <!-- Các bàn chơi sẽ được render ở đây -->
+    </div>
+
+    <!-- Modal Tạo Bàn Mới -->
+    <div class="create-table-modal" id="create-table-modal">
+      <div class="modal-content">
+        <input
+          type="text"
+          class="modal-input"
+          placeholder="Tên bàn"
+          id="table-name-input"
+        />
+        <input
+          type="number"
+          class="modal-input"
+          placeholder="Mức cược (Coins)"
+          id="bet-amount-input"
+        />
+        <div class="modal-buttons">
+          <button class="modal-btn modal-btn-create" id="create-table-confirm">
+            Tạo Bàn
+          </button>
+          <button class="modal-btn modal-btn-cancel" id="create-table-cancel">
+            Hủy
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Dữ liệu mẫu các bàn chơi
+      const initialTables = [
+        {
+          id: 1,
+          name: "Phòng Chiến Thuật",
+          currentPlayers: 2,
+          maxPlayers: 4,
+          betAmount: 100,
+        },
+        {
+          id: 2,
+          name: "Bàn Thách Đấu",
+          currentPlayers: 1,
+          maxPlayers: 2,
+          betAmount: 500,
+        },
+        {
+          id: 3,
+          name: "Đại Chiến",
+          currentPlayers: 3,
+          maxPlayers: 4,
+          betAmount: 200,
+        },
+      ];
+
+      const tablesContainer = document.getElementById("tables-container");
+      const searchInput = document.getElementById("search-input");
+      const openCreateModalBtn = document.getElementById("open-create-modal");
+      const createTableModal = document.getElementById("create-table-modal");
+      const createTableConfirmBtn = document.getElementById(
+        "create-table-confirm"
+      );
+      const createTableCancelBtn = document.getElementById(
+        "create-table-cancel"
+      );
+
+      // Render danh sách bàn chơi
+      function renderTables(tables) {
+        tablesContainer.innerHTML = tables
+          .map(
+            (table) => `
+                <div class="table-card">
+                    <div class="table-header">
+                        <span class="table-name">${table.name}</span>
+                        <div class="table-status">
+                            <div class="player-count">
+                                👥 ${table.currentPlayers}/${table.maxPlayers}
+                            </div>
+                            <span class="bet-amount">💰 ${table.betAmount} Coins</span>
+                        </div>
+                    </div>
+                    <button class="join-btn" onclick="joinTable(${table.id})">
+                        Tham Gia
+                    </button>
+                </div>
+            `
+          )
+          .join("");
+      }
+
+      // Tìm kiếm bàn chơi
+      function searchTables() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const filteredTables = initialTables.filter((table) =>
+          table.name.toLowerCase().includes(searchTerm)
+        );
+        renderTables(filteredTables);
+      }
+
+      // Chức năng tham gia bàn
+      function joinTable(tableId) {
+        alert(`Bạn đã chọn tham gia bàn số ${tableId}`);
+        // Trong thực tế sẽ có logic kết nối WebSocket
+      }
+
+      // Mở modal tạo bàn
+      openCreateModalBtn.addEventListener("click", () => {
+        createTableModal.style.display = "flex";
+      });
+
+      // Đóng modal tạo bàn
+      createTableCancelBtn.addEventListener("click", () => {
+        createTableModal.style.display = "none";
+      });
+
+      // Xác nhận tạo bàn
+      createTableConfirmBtn.addEventListener("click", () => {
+        const tableName = document.getElementById("table-name-input").value;
+        const betAmount = document.getElementById("bet-amount-input").value;
+
+        if (tableName && betAmount) {
+          const newTable = {
+            id: initialTables.length + 1,
+            name: tableName,
+            currentPlayers: 1,
+            maxPlayers: 4,
+            betAmount: parseInt(betAmount),
+          };
+
+          initialTables.push(newTable);
+          renderTables(initialTables);
+          createTableModal.style.display = "none";
+        } else {
+          alert("Vui lòng nhập đầy đủ thông tin");
+        }
+      });
+
+      // Sự kiện tìm kiếm
+      searchInput.addEventListener("input", searchTables);
+
+      // Khởi tạo ban đầu
+      renderTables(initialTables);
+    </script>
+  </body>
+</html>
