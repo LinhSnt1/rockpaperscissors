@@ -8,7 +8,7 @@
   <body>
     <div class="header">
       <div class="user-info">
-        <img src="/api/placeholder/50/50" alt="Avatar" class="avatar" />
+        <img src="" alt="Avatar" class="avatar" />
         <span>Nickname</span>
       </div>
       <div class="coins">
@@ -48,7 +48,17 @@
         });
 
       document.querySelector(".add-coins").addEventListener("click", () => {
-        alert("Chuyển đến màn hình nạp coin");
+        window.location.href = "payment.html";
+
+        function updateBalance() {
+          let balance = localStorage.getItem("balance") || 0;
+          document.getElementById("balance").innerText = `${balance} Coins`;
+        }
+
+        updateBalance();
+
+        window.addEventListener("storage", updateBalance);
+        window.addEventListener("balanceUpdated", updateBalance);
       });
     </script>
   </body>

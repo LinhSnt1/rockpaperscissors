@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nạp Coin - Bao Búa Kéo</title>
+    <link rel="stylesheet" href="style/payment.css" />
+  </head>
+  <body>
+    <button class="back-home" onclick="window.location.href='index.html'">
+      ←
+    </button>
+
+    <div class="container">
+      <div class="section">
+        <h1>Nạp Coin</h1>
+
+        <div class="balance-card">
+          <div class="balance-title">Số dư hiện tại</div>
+          <div class="balance-amount"></div>
+        </div>
+
+        <div class="coin-packages">
+          <div class="package" onclick="selectPackage(this)">
+            <div class="coins">100 Coins</div>
+            <div class="price">10,000đ</div>
+            <div class="bonus">+10 Coins</div>
+          </div>
+          <div class="package" onclick="selectPackage(this)">
+            <div class="coins">200 Coins</div>
+            <div class="price">20,000đ</div>
+            <div class="bonus">+20 Coins</div>
+          </div>
+          <div class="package" onclick="selectPackage(this)">
+            <div class="coins">500 Coins</div>
+            <div class="price">50,000đ</div>
+            <div class="bonus">+50 Coins</div>
+          </div>
+          <div class="package" onclick="selectPackage(this)">
+            <div class="coins">1000 Coins</div>
+            <div class="price">100,000đ</div>
+            <div class="bonus">+100 Coins</div>
+          </div>
+        </div>
+
+        <div class="payment-methods">
+          <h2>Phương thức thanh toán</h2>
+          <div class="method" onclick="selectMethod(this)">
+            <img src="assets/telegram.png" alt="Telegram" />
+            <span>Ví Telegram</span>
+          </div>
+        </div>
+
+        <button class="purchase-btn" onclick="processPurchase()">
+          Thanh Toán
+        </button>
+      </div>
+
+      <div class="section transaction-history">
+        <h2>Lịch sử giao dịch</h2>
+        <div class="transaction">
+          <div class="transaction-info">
+            <div>Nạp 00 Coins</div>
+            <div class="transaction-date">dd/mm/yy 00:00</div>
+          </div>
+          <div>
+            <span class="transaction-amount">0,000đ</span>
+            <span class="transaction-status status-success">Thành công</span>
+          </div>
+        </div>
+        <div class="transaction">
+          <div class="transaction-info">
+            <div>Nạp 000 Coins</div>
+            <div class="transaction-date">dd/mm/yy 00:00</div>
+          </div>
+          <div>
+            <span class="transaction-amount">0,000đ</span>
+            <span class="transaction-status status-pending">Đang xử lý</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.querySelector(".balance-amount").textContent =
+        localStorage.getItem("balance");
+      function selectPackage(element) {
+        document.querySelectorAll(".package").forEach((pkg) => {
+          pkg.classList.remove("selected");
+        });
+        // Thêm selected vào package được chọn
+        element.classList.add("selected");
+      }
+
+      function selectMethod(element) {
+        document.querySelectorAll(".method").forEach((method) => {
+          method.classList.remove("selected");
+        });
+        // Thêm selected vào method được chọn
+        element.classList.add("selected");
+      }
+
+      function processPurchase() {
+        const selectedPackage = document.querySelector(".package.selected");
+        const selectedMethod = document.querySelector(".method.selected");
+
+        if (!selectedPackage || !selectedMethod) {
+          alert("Vui lòng chọn gói coin và phương thức thanh toán");
+          return;
+        }
+
+        let coinsText = document.querySelector(".coins").innerText;
+        console.log(coinsText);
+        let coins = parseInt(coinsText.replace(/\D/g, ""), 10);
+
+        let bonusText = document.querySelector(".bonus").innerText || "0";
+        let bonus = parseInt(bonusText.replace(/\D/g, ""), 10);
+
+        let currentBalance = parseInt(localStorage.getItem("balance")) || 0;
+
+        let newBalance = currentBalance + coins + bonus;
+        console.log(newBalance);
+        localStorage.setItem("balance", newBalance);
+
+        window.dispatchEvent(new Event("balanceUpdated"));
+        alert(`Nạp thành công! Số dư mới là ${newBalance} Coins `);
+        window.location.href = "index.html";
+      }
+    </script>
+  </body>
+</html>

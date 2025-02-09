@@ -136,7 +136,7 @@
       });
 
       randomModeBtn.addEventListener("click", () => {
-        alert("Đang tìm đối thủ ngẫu nhiên...");
+        window.location.href = "quick-play.html";
       });
 
       inviteModeBtn.addEventListener("click", () => {
@@ -144,12 +144,11 @@
       });
 
       document.querySelector(".accept-btn").addEventListener("click", () => {
-        alert("Chấp nhận lời mời chơi");
+        window.location.href = "quick-play.html";
         inviteModal.style.display = "none";
       });
 
       document.querySelector(".decline-btn").addEventListener("click", () => {
-        alert("Từ chối lời mời chơi");
         inviteModal.style.display = "none";
       });
 
