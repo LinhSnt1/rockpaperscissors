@@ -109,18 +109,20 @@
           return;
         }
 
-        let coinsText = document.querySelector(".coins").innerText;
-        console.log(coinsText);
-        let coins = parseInt(coinsText.replace(/\D/g, ""), 10);
+        const coinsText = selectedPackage.querySelector(".coins").innerText;
+        const coins = parseInt(coinsText.replace(/\D/g, ""), 10);
 
-        let bonusText = document.querySelector(".bonus").innerText || "0";
-        let bonus = parseInt(bonusText.replace(/\D/g, ""), 10);
+        const bonusElement = selectedPackage.querySelector(".bonus");
+        const bonusText = bonusElement ? bonusElement.innerText : "0";
+        const bonus = parseInt(bonusText.replace(/\D/g, ""), 10);
 
-        let currentBalance = parseInt(localStorage.getItem("balance")) || 0;
+        const currentBalance = parseInt(localStorage.getItem("balance")) || 0;
+        const newBalance = currentBalance + coins + bonus;
 
-        let newBalance = currentBalance + coins + bonus;
         console.log(newBalance);
         localStorage.setItem("balance", newBalance);
+
+        document.querySelector(".balance-amount").textContent = newBalance;
 
         window.dispatchEvent(new Event("balanceUpdated"));
         alert(`Nạp thành công! Số dư mới là ${newBalance} Coins `);

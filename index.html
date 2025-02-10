@@ -12,8 +12,7 @@
         <span>Nickname</span>
       </div>
       <div class="coins">
-        <span>100</span>
-
+        <span id="balance">0</span>
         <img class="coin-img" src="assets/coin.png" alt="Coin Icon" />
         <button class="add-coins">+</button>
       </div>
@@ -26,7 +25,17 @@
       <button id="play-with-computer" class="game-button">Chơi Với Máy</button>
     </div>
 
+    <script src="client.js"></script>
     <script>
+      function updateBalance() {
+        const balance = localStorage.getItem("balance") || "0";
+        document.getElementById("balance").textContent = balance;
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        gameService.loadUserData();
+      });
+
       document.getElementById("quick-play").addEventListener("click", () => {
         window.location.href = "quick-play.html";
       });
@@ -49,16 +58,6 @@
 
       document.querySelector(".add-coins").addEventListener("click", () => {
         window.location.href = "payment.html";
-
-        function updateBalance() {
-          let balance = localStorage.getItem("balance") || 0;
-          document.getElementById("balance").innerText = `${balance} Coins`;
-        }
-
-        updateBalance();
-
-        window.addEventListener("storage", updateBalance);
-        window.addEventListener("balanceUpdated", updateBalance);
       });
     </script>
   </body>

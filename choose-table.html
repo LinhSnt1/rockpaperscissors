@@ -9,6 +9,14 @@
     <button class="back-home" onclick="window.location.href='index.html'">
       ←
     </button>
+
+    <div class="header">
+      <div class="coins">
+        <span id="balance">0</span>
+        <img class="coin-img" src="assets/coin.png" alt="Coin Icon" />
+      </div>
+    </div>
+
     <div class="search-container">
       <input type="text" id="search-input" placeholder="Tìm kiếm bàn chơi..." />
       <button class="create-table-btn" id="open-create-modal">
@@ -34,6 +42,10 @@
           placeholder="Mức cược (Coins)"
           id="bet-amount-input"
         />
+        <div class="fee-info">Phí tạo phòng: 10% mức cược</div>
+        <div class="total-cost">
+          Tổng chi phí: <span id="total-cost">0</span> Coins
+        </div>
         <div class="modal-buttons">
           <button class="modal-btn modal-btn-create" id="create-table-confirm">
             Tạo Bàn
@@ -45,6 +57,7 @@
       </div>
     </div>
 
+    <script src="client.js"></script>
     <script>
       // Dữ liệu mẫu các bàn chơi
       const initialTables = [
@@ -81,6 +94,24 @@
       const createTableCancelBtn = document.getElementById(
         "create-table-cancel"
       );
+      const betAmountInput = document.getElementById("bet-amount-input");
+      const totalCostSpan = document.getElementById("total-cost");
+
+      function updateBalance() {
+        const balance = localStorage.getItem("balance") || "0";
+        document.getElementById("balance").textContent = balance;
+      }
+
+      function calculateFee(betAmount) {
+        const fee = Math.floor(betAmount * 0.1); // Phí 10%
+        return fee;
+      }
+
+      betAmountInput.addEventListener("input", () => {
+        const betAmount = parseInt(betAmountInput.value) || 0;
+        const fee = calculateFee(betAmount);
+        totalCostSpan.textContent = fee;
+      });
 
       function renderTables(tables) {
         tablesContainer.innerHTML = tables
@@ -115,34 +146,52 @@
 
       // Chức năng tham gia bàn
       function joinTable(tableId) {
-        alert(`Bạn đã chọn tham gia bàn số ${tableId}`);
-        // Trong thực tế sẽ có logic kết nối WebSocket
+        gameService.joinTable(tableId);
       }
-
-      openCreateModalBtn.addEventListener("click", () => {
-        createTableModal.style.display = "flex";
-      });
-
-      createTableCancelBtn.addEventListener("click", () => {
-        createTableModal.style.display = "none";
-      });
 
       createTableConfirmBtn.addEventListener("click", () => {
         const tableName = document.getElementById("table-name-input").value;
-        const betAmount = document.getElementById("bet-amount-input").value;
+        const betAmount = parseInt(betAmountInput.value);
 
         if (tableName && betAmount) {
+          const fee = calculateFee(betAmount);
+          const currentBalance = parseInt(localStorage.getItem("balance")) || 0;
+
+          if (currentBalance < betAmount + fee) {
+            alert(
+              "Số dư không đủ để tạo bàn! (Cần " +
+                betAmount +
+                " coins tiền cược và " +
+                fee +
+                " coins phí)"
+            );
+            return;
+          }
+
+          // Trừ tiền
+          const newBalance = currentBalance - fee;
+          localStorage.setItem("balance", newBalance);
+          updateBalance();
+
+          // Tạo bàn mới
           const newTable = {
             id: initialTables.length + 1,
             name: tableName,
             currentPlayers: 1,
             maxPlayers: 4,
-            betAmount: parseInt(betAmount),
+            betAmount: betAmount,
           };
 
           initialTables.push(newTable);
           renderTables(initialTables);
           createTableModal.style.display = "none";
+
+          // Reset form
+          document.getElementById("table-name-input").value = "";
+          betAmountInput.value = "";
+          totalCostSpan.textContent = "0";
+
+          alert(`Tạo bàn thành công! Đã trừ ${fee} Coins phí tạo phòng)`);
         } else {
           alert("Vui lòng nhập đầy đủ thông tin");
         }
@@ -150,6 +199,7 @@
 
       searchInput.addEventListener("input", searchTables);
 
+      updateBalance();
       renderTables(initialTables);
     </script>
   </body>
