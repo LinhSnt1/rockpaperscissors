@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <title>Bao Búa Kéo - Chơi Nhanh PvP</title>
     <link rel="stylesheet" href="style/quick-play.css" />
+    <script src="client.js"></script>
   </head>
   <body>
     <button class="back-home" onclick="window.location.href='index.html'">
@@ -54,15 +55,9 @@
         </div>
         <div class="timer" id="player1-timer">30</div>
         <div class="choices">
-          <div class="choice" data-choice="Bao" onclick="selectChoice('Bao')">
-            ✋
-          </div>
-          <div class="choice" data-choice="Búa" onclick="selectChoice('Búa')">
-            ✊
-          </div>
-          <div class="choice" data-choice="Kéo" onclick="selectChoice('Kéo')">
-            ✌️
-          </div>
+          <div class="choice" data-choice="Bao">✋</div>
+          <div class="choice" data-choice="Búa">✊</div>
+          <div class="choice" data-choice="Kéo">✌️</div>
         </div>
       </div>
     </div>
@@ -71,7 +66,6 @@
     <button id="find-match" class="game-button">Tìm Trận</button>
 
     <script>
-      let socket;
       let timeLeft = 30;
       let timer = null;
       let playerChoice = null;
@@ -79,56 +73,13 @@
       let currentBet = 0;
       let gameState = "idle"; // idle, betting, playing, finished
 
-      // Khởi tạo WebSocket
-      function initializeWebSocket() {
-        socket = new WebSocket("ws://localhost:8080");
-
-        socket.onopen = () => {
-          console.log("Connected to server");
-        };
-
-        socket.onmessage = (event) => {
-          const data = JSON.parse(event.data);
-          handleWebSocketMessage(data);
-        };
-
-        socket.onclose = () => {
-          console.log("Disconnected from server");
-        };
-      }
-
-      function handleWebSocketMessage(data) {
-        switch (data.type) {
-          case "match_found":
-            document.getElementById("match-status").textContent =
-              "Đã tìm thấy đối thủ";
-            document.getElementById("player2-name").textContent =
-              data.opponent_name;
-            showBettingModal();
-            break;
-
-          case "bet_confirmed":
-            if (data.status === "ready") {
-              currentBet = data.amount;
-              document.getElementById("current-bet").textContent = currentBet;
-              startGame();
-            }
-            break;
-
-          case "opponent_choice":
-            opponentChoice = data.choice;
-            checkGameResult();
-            break;
-
-          case "game_result":
-            handleGameResult(data.result, data.winAmount);
-            break;
-        }
-      }
-
-      function updateBalance() {
-        const balance = localStorage.getItem("balance") || "0";
-        document.getElementById("balance").textContent = balance;
+      // Xử lý khi tìm thấy đối thủ
+      function handleMatchFound(data) {
+        document.getElementById("match-status").textContent =
+          "Đã tìm thấy đối thủ";
+        document.getElementById("player2-name").textContent =
+          data.opponent_name;
+        showBettingModal();
       }
 
       function showBettingModal() {
@@ -149,14 +100,7 @@
           return;
         }
 
-        // Gửi thông tin đặt cược lên server
-        socket.send(
-          JSON.stringify({
-            type: "place_bet",
-            amount: betAmount,
-          })
-        );
-
+        gameService.placeBet(betAmount);
         document.getElementById("betting-modal").style.display = "none";
       }
 
@@ -195,13 +139,7 @@
           .classList.add("selected");
 
         playerChoice = choice;
-        socket.send(
-          JSON.stringify({
-            type: "player_choice",
-            choice: choice,
-          })
-        );
-
+        gameService.makeChoice(choice);
         document.getElementById("player1-waiting").style.display = "block";
       }
 
@@ -212,43 +150,24 @@
         selectChoice(randomChoice);
       }
 
-      function checkGameResult() {
-        if (playerChoice && opponentChoice) {
-          clearInterval(timer);
-          socket.send(
-            JSON.stringify({
-              type: "check_result",
-              playerChoice: playerChoice,
-              opponentChoice: opponentChoice,
-            })
-          );
-        }
-      }
-
-      function handleGameResult(result, winAmount) {
+      function handleGameResult(data) {
         gameState = "finished";
         let resultText = "";
-        let currentBalance = parseInt(localStorage.getItem("balance")) || 0;
 
-        switch (result) {
+        switch (data.result) {
           case "win":
-            resultText = `Bạn thắng! +${winAmount} Coins`;
-            currentBalance += winAmount;
+            resultText = `Bạn thắng! +${data.winAmount} Coins`;
             break;
           case "lose":
             resultText = `Bạn thua! -${currentBet} Coins`;
-            currentBalance -= currentBet;
             break;
           case "draw":
             resultText = "Hòa!";
             break;
         }
 
-        localStorage.setItem("balance", currentBalance);
-        updateBalance();
         document.getElementById("result").textContent = resultText;
 
-        // Reset game state sau 3 giây
         setTimeout(() => {
           resetGame();
         }, 3000);
@@ -266,27 +185,49 @@
           .forEach((el) => el.classList.remove("selected"));
       }
 
-      function findMatch() {
+      // Khởi tạo event listeners
+      document.getElementById("find-match").addEventListener("click", () => {
         if (gameState !== "idle") return;
-
         document.getElementById("match-status").textContent =
           "Đang tìm đối thủ...";
-        socket.send(
-          JSON.stringify({
-            type: "find_match",
-          })
-        );
-      }
+        gameService.findMatch();
+      });
 
-      // Khởi tạo
-      document
-        .getElementById("find-match")
-        .addEventListener("click", findMatch);
       document
         .getElementById("confirm-bet")
         .addEventListener("click", confirmBet);
-      initializeWebSocket();
-      updateBalance();
+
+      // Khởi tạo click events cho các lựa chọn
+      document.querySelectorAll(".choice").forEach((choice) => {
+        choice.addEventListener("click", () => {
+          selectChoice(choice.dataset.choice);
+        });
+      });
+
+      // Thêm gameState handlers cho WebSocket class
+      if (typeof gameService !== "undefined") {
+        // Xử lý bet confirmed
+        const originalHandleMessage = gameService.handleMessage;
+        gameService.handleMessage = function (data) {
+          originalHandleMessage.call(gameService, data);
+          if (data.type === "bet_confirmed" && data.status === "ready") {
+            currentBet = data.amount;
+            document.getElementById("current-bet").textContent = currentBet;
+            startGame();
+          } else if (data.type === "opponent_choice") {
+            opponentChoice = data.choice;
+            if (playerChoice) {
+              gameService.socket.send(
+                JSON.stringify({
+                  type: "check_result",
+                  playerChoice: playerChoice,
+                  opponentChoice: opponentChoice,
+                })
+              );
+            }
+          }
+        };
+      }
     </script>
   </body>
 </html>
